@@ -6,17 +6,17 @@ import (
 
 func TestShapeFromString(t *testing.T) {
 
-	rect1 := Shape{100, 80, 90, 60, ""}
+	rect1 := Shape{100, 80, 90, 60, "", ""}
 
-	str, err := rectangleToString(rect1)
+	str, err := shapeToString(rect1)
 	if err != nil {
-		t.Log("rectangleToString error")
+		t.Log("shapeToString error")
 		t.Fail()
 	}
 
-	rect2, err := rectangleFromString(str)
+	rect2, err := shapeFromString(str)
 	if err != nil {
-		t.Log("rectangleFromString error")
+		t.Log("shapeFromString error")
 		t.Fail()
 	}
 

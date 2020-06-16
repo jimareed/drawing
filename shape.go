@@ -13,9 +13,10 @@ type Shape struct {
 	Width  float64 `json:"width"`
 	Height float64 `json:"height"`
 	Type   string  `json:"type"`
+	Desc   string  `json:"desc"`
 }
 
-func rectangleFromString(input string) (Shape, error) {
+func shapeFromString(input string) (Shape, error) {
 
 	r := strings.NewReader(input)
 	rect := Shape{}
@@ -24,7 +25,7 @@ func rectangleFromString(input string) (Shape, error) {
 	return rect, err
 }
 
-func rectangleToString(rect Shape) (string, error) {
+func shapeToString(rect Shape) (string, error) {
 
 	b, err := json.Marshal(rect)
 	if err != nil {
@@ -34,11 +35,19 @@ func rectangleToString(rect Shape) (string, error) {
 	return string(b), nil
 }
 
-func rectangleToSvg(rect Shape, transitionId int) string {
+func shapeToSvg(rect Shape, transitionId int) string {
 
-	svg := fmt.Sprintf(
-		"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"4\"></rect>\n",
-		transitionId, rect.X, rect.Y, rect.Width, rect.Height)
+	svg := ""
+
+	if rect.Type == "text" {
+		svg += fmt.Sprintf(
+			"<text class=\"transition%d\" x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%dpx\">%s</text>\n",
+			transitionId, rect.X, rect.Y, 30, rect.Type)
+	} else {
+		svg += fmt.Sprintf(
+			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"4\"></rect>\n",
+			transitionId, rect.X, rect.Y, rect.Width, rect.Height)
+	}
 
 	return svg
 }

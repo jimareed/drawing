@@ -39,7 +39,7 @@ func ToSvg(d Drawing) (string, error) {
 	rects := ""
 	i := 0
 	for _, r := range d.Shapes {
-		rects += rectangleToSvg(r, i)
+		rects += shapeToSvg(r, i)
 	}
 
 	connectors := ""
@@ -71,7 +71,7 @@ func ToSvg(d Drawing) (string, error) {
 
 func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 
-	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, ""})
+	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "rect", ""})
 	return drawing, nil
 }
 

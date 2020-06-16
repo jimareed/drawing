@@ -8,11 +8,11 @@ import (
 
 // Drawing
 type Drawing struct {
-	Width      float64     `json:"width"`
-	Height     float64     `json:"height"`
-	RectWidth  float64     `json:"rectWidth"`
-	RectHeight float64     `json:"rectHeight"`
-	Rects      []Rectangle `json:"rects"`
+	Width      float64 `json:"width"`
+	Height     float64 `json:"height"`
+	RectWidth  float64 `json:"rectWidth"`
+	RectHeight float64 `json:"rectHeight"`
+	Shapes     []Shape `json:"shapes"`
 }
 
 func FromString(input string) (Drawing, error) {
@@ -38,7 +38,7 @@ func ToSvg(d Drawing) (string, error) {
 
 	rects := ""
 	i := 0
-	for _, r := range d.Rects {
+	for _, r := range d.Shapes {
 		rects += rectangleToSvg(r, i)
 	}
 
@@ -71,11 +71,11 @@ func ToSvg(d Drawing) (string, error) {
 
 func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 
-	drawing.Rects = append(drawing.Rects, Rectangle{x, y, drawing.RectWidth, drawing.RectHeight})
+	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, ""})
 	return drawing, nil
 }
 
 func RectangleCount(drawing Drawing) int {
 
-	return len(drawing.Rects)
+	return len(drawing.Shapes)
 }

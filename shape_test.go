@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-func TestRectangleFromString(t *testing.T) {
+func TestShapeFromString(t *testing.T) {
 
-	rect1 := Rectangle{100, 80, 90, 60}
+	rect1 := Shape{100, 80, 90, 60, ""}
 
 	str, err := rectangleToString(rect1)
 	if err != nil {

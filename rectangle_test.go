@@ -6,7 +6,7 @@ import (
 
 func TestRectangleFromString(t *testing.T) {
 
-	rect1 := Rectangle{60, 40}
+	rect1 := Rectangle{100, 80, 90, 60}
 
 	str, err := rectangleToString(rect1)
 	if err != nil {
@@ -20,7 +20,7 @@ func TestRectangleFromString(t *testing.T) {
 		t.Fail()
 	}
 
-	if rect2.X != 60 || rect2.Y != 40 {
+	if rect2.X != 100 || rect2.Y != 80 {
 		t.Log("rectangle To/From string error")
 		t.Fail()
 	}

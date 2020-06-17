@@ -14,6 +14,7 @@ type Shape struct {
 	Height float64 `json:"height"`
 	Type   string  `json:"type"`
 	Desc   string  `json:"desc"`
+	Size   int     `json:"size"`
 }
 
 func shapeFromString(input string) (Shape, error) {
@@ -42,7 +43,7 @@ func shapeToSvg(rect Shape, transitionId int) string {
 	if rect.Type == "text" {
 		svg += fmt.Sprintf(
 			"<text class=\"transition%d\" x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%dpx\">%s</text>\n",
-			transitionId, rect.X, rect.Y, 30, rect.Type)
+			transitionId, rect.X, rect.Y, rect.Size, rect.Desc)
 	} else {
 		svg += fmt.Sprintf(
 			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"4\"></rect>\n",

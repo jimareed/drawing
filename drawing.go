@@ -71,7 +71,7 @@ func ToSvg(d Drawing) (string, error) {
 
 func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 
-	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "rect", ""})
+	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "rect", "", 0})
 	return drawing, nil
 }
 

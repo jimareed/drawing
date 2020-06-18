@@ -8,11 +8,12 @@ import (
 
 // Drawing
 type Drawing struct {
-	Width      float64 `json:"width"`
-	Height     float64 `json:"height"`
-	RectWidth  float64 `json:"rectWidth"`
-	RectHeight float64 `json:"rectHeight"`
-	Shapes     []Shape `json:"shapes"`
+	Width      float64     `json:"width"`
+	Height     float64     `json:"height"`
+	RectWidth  float64     `json:"rectWidth"`
+	RectHeight float64     `json:"rectHeight"`
+	Shapes     []Shape     `json:"shapes"`
+	Connectors []Connector `json:"connectors"`
 }
 
 func FromString(input string) (Drawing, error) {
@@ -43,6 +44,12 @@ func ToSvg(d Drawing) (string, error) {
 	}
 
 	connectors := ""
+	i = 1
+	for _, c := range d.Connectors {
+		connectors += connectorToSvg(d, c, i)
+		i++
+	}
+
 	transitions := ""
 
 	s := fmt.Sprintf(
@@ -73,6 +80,12 @@ func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 
 	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "rect", "", 0})
 	return drawing, nil
+}
+
+func AddConnector(drawing Drawing, b1 int, b2 int) Drawing {
+
+	drawing.Connectors = append(drawing.Connectors, Connector{b1, b2})
+	return drawing
 }
 
 func RectangleCount(drawing Drawing) int {

@@ -19,6 +19,15 @@ type Connector struct {
 	Shape2 int `json:"shape2"`
 }
 
+func connectorSlope(d Drawing, c Connector) float64 {
+
+	if len(d.Shapes) <= c.Shape1 || len(d.Shapes) <= c.Shape2 {
+		return 0
+	}
+
+	return slope(d.Shapes[c.Shape1].X, d.Shapes[c.Shape1].Y, d.Shapes[c.Shape2].X, d.Shapes[c.Shape2].Y)
+}
+
 func connectorFromString(input string) (Connector, error) {
 
 	r := strings.NewReader(input)
@@ -42,8 +51,8 @@ func connectorToSvg(d Drawing, c Connector, transitionId int) string {
 
 	svg := ""
 
-	p1 := calcP1(d, c)
-	p2 := calcP2(d, c)
+	p1 := connectorP1(d, c)
+	p2 := connectorP2(d, c)
 	svg += fmt.Sprintf(
 		"<line class=\"transition%d\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"4\" marker-end=\"url(#arrowhead)\"></line>",
 		transitionId, p1.x, p1.y, p2.x, p2.y)
@@ -59,7 +68,7 @@ func arrowHeadX(slope float64) float64 {
 	return arrowHeadLength / math.Sqrt(slope*slope+1)
 }
 
-func calcP1(d Drawing, c Connector) Point {
+func connectorP1(d Drawing, c Connector) Point {
 	p := Point{0.0, 0.0}
 	p1 := Point{d.Shapes[c.Shape1].X, d.Shapes[c.Shape1].Y}
 	p2 := Point{d.Shapes[c.Shape2].X, d.Shapes[c.Shape2].Y}
@@ -104,7 +113,7 @@ func calcP1(d Drawing, c Connector) Point {
 	return p
 }
 
-func calcP2(d Drawing, c Connector) Point {
+func connectorP2(d Drawing, c Connector) Point {
 	p := Point{213, 165}
 
 	p1 := Point{d.Shapes[c.Shape1].X, d.Shapes[c.Shape1].Y}

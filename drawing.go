@@ -82,9 +82,9 @@ func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 	return drawing, nil
 }
 
-func AddConnector(drawing Drawing, b1 int, b2 int) Drawing {
+func AddConnector(drawing Drawing, c Connector) Drawing {
 
-	drawing.Connectors = append(drawing.Connectors, Connector{b1, b2})
+	drawing.Connectors = append(drawing.Connectors, c)
 	return drawing
 }
 

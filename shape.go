@@ -15,6 +15,7 @@ type Shape struct {
 	Type   string  `json:"type"`
 	Desc   string  `json:"desc"`
 	Size   int     `json:"size"`
+	Style  string  `json:"style"`
 }
 
 func shapeFromString(input string) (Shape, error) {
@@ -45,9 +46,13 @@ func shapeToSvg(rect Shape, transitionId int) string {
 			"<text class=\"transition%d\" x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%dpx\">%s</text>\n",
 			transitionId, rect.X, rect.Y, rect.Size, rect.Desc)
 	} else {
+		strokeWidth := 4
+		if rect.Style == "hidden" {
+			strokeWidth = 0
+		}
 		svg += fmt.Sprintf(
-			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"4\"></rect>\n",
-			transitionId, rect.X, rect.Y, rect.Width, rect.Height)
+			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"%d\"></rect>\n",
+			transitionId, rect.X, rect.Y, rect.Width, rect.Height, strokeWidth)
 	}
 
 	return svg

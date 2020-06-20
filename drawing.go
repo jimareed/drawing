@@ -82,13 +82,19 @@ func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 	return drawing, nil
 }
 
+func AddText(drawing Drawing, x float64, y float64, text string, size int) (Drawing, error) {
+
+	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "text", text, size})
+	return drawing, nil
+}
+
 func AddConnector(drawing Drawing, c Connector) Drawing {
 
 	drawing.Connectors = append(drawing.Connectors, c)
 	return drawing
 }
 
-func RectangleCount(drawing Drawing) int {
+func ShapeCount(drawing Drawing) int {
 
 	return len(drawing.Shapes)
 }

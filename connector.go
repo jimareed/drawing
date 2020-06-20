@@ -73,48 +73,43 @@ func connectorP1(d Drawing, c Connector) Point {
 	p1 := Point{d.Shapes[c.Shape1].X, d.Shapes[c.Shape1].Y}
 	p2 := Point{d.Shapes[c.Shape2].X, d.Shapes[c.Shape2].Y}
 
-	s := float64(slope(p1.x, p1.y, p2.x, p2.y))
+	s := slope(p1.x, p1.y, p2.x, p2.y)
 
-	/*
-		    if s == +Inf || s == -Inf {
-				p.x = p1.x + d.blockWidth / 2;
-				if (this.props.p1.y < this.props.p2.y) {
-				  y = this.props.p1.y + this.props.blockHeight;
-				} else {
-				  y = this.props.p1.y;
-				}
-			} else {
-
-			}
-	*/
-
-	if math.Abs(s) <= slope(0.0, 0.0, d.RectWidth, d.RectHeight) {
-		// right side
-		if p1.x < p2.x {
-			p.x = p1.x + d.RectWidth
-			p.y = p1.y + d.RectHeight/2 + d.RectWidth/2*s
+	if s == math.Inf(1) || s == math.Inf(-1) {
+		p.x = p1.x + d.RectWidth/2
+		if p1.y < p2.y {
+			p.y = p1.y + d.RectHeight
 		} else {
-			// left side
-			p.x = p1.x
-			p.y = p1.y + d.RectHeight/2 - d.RectWidth/2*s
+			p.y = p1.y
 		}
 	} else {
-		// top side
-		if p1.y > p2.y {
-			p.x = p1.x + d.RectWidth/2 - (d.RectHeight/2)/s
-			p.y = p1.y
-			// botton side
+		if math.Abs(s) <= slope(0.0, 0.0, d.RectWidth, d.RectHeight) {
+			if p1.x < p2.x {
+				// right side
+				p.x = p1.x + d.RectWidth
+				p.y = p1.y + d.RectHeight/2 + d.RectWidth/2*s
+			} else {
+				// left side
+				p.x = p1.x
+				p.y = p1.y + d.RectHeight/2 - d.RectWidth/2*s
+			}
 		} else {
-			p.x = p1.x + d.RectWidth/2 + (d.RectHeight/2)/s
-			p.y = p1.y + d.RectHeight
+			if p1.y > p2.y {
+				// top side
+				p.x = p1.x + d.RectWidth/2 - (d.RectHeight/2)/s
+				p.y = p1.y
+			} else {
+				// botton side
+				p.x = p1.x + d.RectWidth/2 + (d.RectHeight/2)/s
+				p.y = p1.y + d.RectHeight
+			}
 		}
 	}
-
 	return p
 }
 
 func connectorP2(d Drawing, c Connector) Point {
-	p := Point{213, 165}
+	p := Point{0, 0}
 
 	p1 := Point{d.Shapes[c.Shape1].X, d.Shapes[c.Shape1].Y}
 	p2 := Point{d.Shapes[c.Shape2].X, d.Shapes[c.Shape2].Y}
@@ -124,100 +119,36 @@ func connectorP2(d Drawing, c Connector) Point {
 	arrowHeadX := arrowHeadX(s)
 	arrowHeadY := arrowHeadX * s
 
-	if math.Abs(s) <= float64(slope(0, 0, d.RectWidth, d.RectHeight)) {
-		// right side
-		if p1.x < p2.x {
-			p.x = p2.x - arrowHeadX
-			p.y = p2.y + d.RectHeight/2 - d.RectWidth/2*s - arrowHeadY
+	if s == math.Inf(1) || s == math.Inf(-1) {
+		p.x = p2.x + d.RectWidth/2
+		if p1.y < p2.y {
+			p.y = p2.y - arrowHeadLength
 		} else {
-			// left side
-			p.x = p2.x + d.RectWidth + arrowHeadX
-			p.y = p2.y + d.RectHeight/2 + d.RectWidth/2*s + arrowHeadY
+			p.y = p2.y + d.RectHeight + arrowHeadLength
 		}
 	} else {
-		// top side
-		if p1.y > p2.y {
-			p.x = p1.x + d.RectWidth/2 - (d.RectHeight/2)/s
-			p.y = p1.y
-			// botton side
+		if math.Abs(s) <= float64(slope(0, 0, d.RectWidth, d.RectHeight)) {
+			// right side
+			if p1.x < p2.x {
+				p.x = p2.x - arrowHeadX
+				p.y = p2.y + d.RectHeight/2 - d.RectWidth/2*s - arrowHeadY
+			} else {
+				// left side
+				p.x = p2.x + d.RectWidth + arrowHeadX
+				p.y = p2.y + d.RectHeight/2 + d.RectWidth/2*s + arrowHeadY
+			}
 		} else {
-			p.x = p1.x + d.RectWidth/2 + (d.RectHeight/2)/s
-			p.y = p1.y + d.RectHeight
+			// top side
+			if p1.y > p2.y {
+				p.x = p1.x + d.RectWidth/2 - (d.RectHeight/2)/s
+				p.y = p1.y
+				// botton side
+			} else {
+				p.x = p1.x + d.RectWidth/2 + (d.RectHeight/2)/s
+				p.y = p1.y + d.RectHeight
+			}
 		}
 	}
 
 	return p
-	/*
-	   var x = 0;
-	   var y = 0;
-
-	   if (slope === Infinity|| slope === -Infinity) {
-	     x = this.props.p2.x + this.props.blockWidth / 2;
-	     if (this.props.p1.y < this.props.p2.y) {
-	       y = this.props.p2.y - arrowHeadLength;
-	     } else {
-	       y = this.props.p2.y + this.props.blockHeight + arrowHeadLength;
-	     }
-	   } else {
-	     var arrowHeadX = this.arrowHeadX(slope);
-	     var arrowHeadY = arrowHeadX * slope;
-
-	     if (Math.abs(slope) <= this.slope(0,0,this.props.blockWidth,this.props.blockHeight)) {
-	       // right side
-	       if (this.props.p1.x < this.props.p2.x) {
-	         x = this.props.p2.x;
-	         y = this.props.p2.y + this.props.blockHeight / 2 - this.props.blockWidth / 2 * slope;
-
-	         if (drawArrowHead) {
-	           x -= arrowHeadX;
-	           y -= arrowHeadY;
-	         }
-	         console.log("right: " + arrowHeadX , "," + arrowHeadY + "slope:" + slope)
-	       }
-	       // left side
-	       else {
-	         x = this.props.p2.x + this.props.blockWidth;
-	         y = this.props.p2.y + this.props.blockHeight / 2 + this.props.blockWidth / 2 * slope;
-	         if (drawArrowHead) {
-	           x += arrowHeadX;
-	           y += arrowHeadY;
-	         }
-	         console.log("left: " + arrowHeadX , "," + arrowHeadY + "slope:" + slope)
-	       }
-	     } else {
-	       // top side
-	       if (this.props.p1.y > this.props.p2.y) {
-	         x = this.props.p2.x + this.props.blockWidth / 2 + (this.props.blockHeight / 2) / slope;
-	         y = this.props.p2.y + this.props.blockHeight;
-	         if (drawArrowHead) {
-	           if (this.props.p1.x < this.props.p2.x) {
-	             arrowHeadX = arrowHeadX * -1;
-	           }
-	           x += arrowHeadX
-	           y += Math.abs(arrowHeadY);
-	         }
-	         console.log("top: " + arrowHeadX , "," + arrowHeadY + "slope:" + slope)
-	        }
-	       // botton side
-	       else {
-	         x = this.props.p2.x + this.props.blockWidth / 2 - (this.props.blockHeight / 2) / slope;
-	         y = this.props.p2.y;
-	         if (drawArrowHead) {
-	           if (this.props.p1.x < this.props.p2.x) {
-	             arrowHeadX = arrowHeadX * -1;
-	           }
-	           x += arrowHeadX;
-	           y -= Math.abs(arrowHeadY);
-	         }
-	         console.log("bottom: " + arrowHeadX , "," + arrowHeadY + "slope:" + slope)
-	        }
-	     }
-	   }
-
-	   return ({
-	     x: x,
-	     y: y
-	   })
-	*/
-
 }

@@ -26,7 +26,7 @@ func TestToString(t *testing.T) {
 		t.Fail()
 	}
 
-	if RectangleCount(d2) != RectangleCount(d1) {
+	if ShapeCount(d2) != ShapeCount(d1) {
 		t.Log("To/FromString error")
 		t.Fail()
 	}

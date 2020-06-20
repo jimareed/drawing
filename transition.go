@@ -39,7 +39,7 @@ func transitionToSvg(t Transition, transitionId int) string {
 			"	animation-name: transitionOpacity;"+
 			"	animation-duration: %ds;"+
 			"	animation-iteration-count: 1;"+
-			"}", transitionId, t.Duration)
+			"}\n", transitionId, t.Duration)
 
 	return svg
 }

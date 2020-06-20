@@ -54,7 +54,7 @@ func connectorToSvg(d Drawing, c Connector, transitionId int) string {
 	p1 := connectorP1(d, c)
 	p2 := connectorP2(d, c)
 	svg += fmt.Sprintf(
-		"<line class=\"transition%d\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"4\" marker-end=\"url(#arrowhead)\"></line>",
+		"<line class=\"transition%d\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"4\" marker-end=\"url(#arrowhead)\"></line>\n",
 		transitionId, p1.x, p1.y, p2.x, p2.y)
 
 	return svg

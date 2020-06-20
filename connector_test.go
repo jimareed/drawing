@@ -1,8 +1,23 @@
 package drawing
 
 import (
+	"math"
 	"testing"
 )
+
+func InitDrawing(rect1 Point, rect2 Point) Drawing {
+
+	d1 := Drawing{}
+	d1.Width = 200
+	d1.Height = 200
+	d1.RectWidth = 20
+	d1.RectHeight = 20
+
+	d1, _ = AddRectangle(d1, rect1.x, rect1.y)
+	d1, _ = AddRectangle(d1, rect2.x, rect2.y)
+
+	return d1
+}
 
 func TestConnectorFromString(t *testing.T) {
 
@@ -27,77 +42,262 @@ func TestConnectorFromString(t *testing.T) {
 
 }
 
-func TestConnectorBasics(t *testing.T) {
-	d1 := Drawing{}
-	d1.Width = 600
-	d1.Height = 400
-	d1.RectWidth = 30
-	d1.RectHeight = 20
+func TestRightArrow(t *testing.T) {
 
-	d1, _ = AddRectangle(d1, 10, 10)
-	d1, _ = AddRectangle(d1, 60, 10)
+	d1 := InitDrawing(Point{90, 90}, Point{160, 90})
 
 	c1 := Connector{0, 1}
-
 	d1 = AddConnector(d1, c1)
 
-	if connectorSlope(d1, c1) != 0 {
-		t.Log("c1 slope error")
+	expectedP1 := Point{110, 100}
+	expectedP2 := Point{139, 100}
+	expectedSlope := 0.0
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
 		t.Fail()
 	}
-
-	expectedP1 := Point{40, 20}
-	p1 := connectorP1(d1, c1)
-
-	if p1 != expectedP1 {
-		t.Log("c1 p1 error")
-		t.Log(p1)
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
 		t.Fail()
 	}
-
-	d1, _ = AddRectangle(d1, 20, 20)
-	d1, _ = AddRectangle(d1, 60, 40)
-
-	c2 := Connector{2, 3}
-
-	if connectorSlope(d1, c2) != 0.5 {
-		t.Log("c2 slope error")
-		t.Log(connectorSlope(d1, c2))
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
 		t.Fail()
 	}
 
 }
 
-func TestSlideGenerator(t *testing.T) {
-	dr := Drawing{}
-	dr.Width = 300
-	dr.Height = 200
-	dr.RectWidth = 30
-	dr.RectHeight = 20
+func TestLeftArrow(t *testing.T) {
 
-	dr, _ = AddRectangle(dr, 10, 10)
-	dr, _ = AddText(dr, 100, 100, "Slide", 36)
+	d1 := InitDrawing(Point{90, 90}, Point{10, 90})
 
-	c1 := Connector{1, 0}
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
 
-	dr = AddConnector(dr, c1)
+	expectedP1 := Point{90, 100}
+	expectedP2 := Point{51, 100}
+	expectedSlope := 0.0
 
-	expectedP1 := Point{105, 100}
-	p1 := connectorP1(dr, c1)
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
 
-	if p1 != expectedP1 {
-		t.Log("c1 p1 error")
-		t.Log(p1)
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
 		t.Fail()
 	}
 
-	expectedP2 := Point{105, 100}
-	p2 := connectorP2(dr, c1)
+}
 
-	if p2 != expectedP2 {
-		t.Log("c1 p2 error")
-		t.Log(p2)
+func TestUpArrow(t *testing.T) {
+
+	d1 := InitDrawing(Point{90, 90}, Point{90, 10})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{100, 90}
+	expectedP2 := Point{100, 51}
+	expectedSlope := math.Inf(-1)
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
 		t.Fail()
 	}
 
+}
+
+func TestDownArrow(t *testing.T) {
+
+	d1 := InitDrawing(Point{90, 90}, Point{90, 160})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{100, 110}
+	expectedP2 := Point{100, 139}
+	expectedSlope := math.Inf(1)
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
+		t.Fail()
+	}
+
+}
+
+func TestUpperRightArrow(t *testing.T) {
+
+	d1 := InitDrawing(Point{90, 90}, Point{150, 45})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{110, 92.5}
+	expectedP2 := Point{133.2, 75.1}
+	expectedSlope := -.75
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
+		t.Fail()
+	}
+}
+
+func TestUpperLeftArrow(t *testing.T) {
+
+	d1 := InitDrawing(Point{90, 90}, Point{30, 45})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{90, 92.5}
+	expectedP2 := Point{66.8, 75.1}
+	expectedSlope := .75
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
+		t.Fail()
+	}
+}
+
+func TestLowerRightArrow(t *testing.T) {
+
+	d1 := InitDrawing(Point{90, 90}, Point{150, 170})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{107.5, 110}
+	expectedP2 := Point{139.9, 153.2}
+	expectedSlope := 1.0/3.0 + 1.0
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
+		t.Fail()
+	}
+}
+
+func TestLowerLeftArrow(t *testing.T) {
+
+	d1 := InitDrawing(Point{90, 90}, Point{30, 170})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{92.5, 110}
+	expectedP2 := Point{60.1, 153.2}
+	expectedSlope := (1.0/3.0 + 1.0) * -1
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+	actualSlope := connectorSlope(d1, c1)
+
+	if actualP1 != expectedP1 {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if actualP2 != expectedP2 {
+		t.Log("invalid P2")
+		t.Log(actualP2)
+		t.Fail()
+	}
+	if actualSlope != expectedSlope {
+		t.Log("invalid Slope")
+		t.Log(actualSlope)
+		t.Fail()
+	}
 }

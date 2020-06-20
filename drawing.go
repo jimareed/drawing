@@ -8,12 +8,13 @@ import (
 
 // Drawing
 type Drawing struct {
-	Width      float64     `json:"width"`
-	Height     float64     `json:"height"`
-	RectWidth  float64     `json:"rectWidth"`
-	RectHeight float64     `json:"rectHeight"`
-	Shapes     []Shape     `json:"shapes"`
-	Connectors []Connector `json:"connectors"`
+	Width       float64      `json:"width"`
+	Height      float64      `json:"height"`
+	RectWidth   float64      `json:"rectWidth"`
+	RectHeight  float64      `json:"rectHeight"`
+	Shapes      []Shape      `json:"shapes"`
+	Connectors  []Connector  `json:"connectors"`
+	Transitions []Transition `json:"transitions"`
 }
 
 func FromString(input string) (Drawing, error) {
@@ -41,6 +42,7 @@ func ToSvg(d Drawing) (string, error) {
 	i := 0
 	for _, r := range d.Shapes {
 		rects += shapeToSvg(r, i)
+		i++
 	}
 
 	connectors := ""
@@ -51,6 +53,11 @@ func ToSvg(d Drawing) (string, error) {
 	}
 
 	transitions := ""
+	i = 0
+	for _, t := range d.Transitions {
+		transitions += transitionToSvg(t, i)
+		i++
+	}
 
 	s := fmt.Sprintf(
 		"<svg width=\"%f\" height=\"%f\" align=\"center\">"+

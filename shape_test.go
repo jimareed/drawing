@@ -21,7 +21,7 @@ func TestShapeFromString(t *testing.T) {
 	}
 
 	if rect2.X != 100 || rect2.Y != 80 {
-		t.Log("rectangle To/From string error")
+		t.Log("shape To/From string error")
 		t.Fail()
 	}
 }

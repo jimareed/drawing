@@ -16,6 +16,7 @@ type Shape struct {
 	Desc   string  `json:"desc"`
 	Size   int     `json:"size"`
 	Style  string  `json:"style"`
+	Slide  string  `json:"slide"`
 }
 
 func shapeFromString(input string) (Shape, error) {

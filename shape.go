@@ -51,9 +51,13 @@ func shapeToSvg(rect Shape, transitionId int) string {
 		if rect.Style == "hidden" {
 			strokeWidth = 0
 		}
+		onClick := ""
+		if rect.Slide != "" {
+			onClick = fmt.Sprintf("onclick=\"location.href='%s'\"", rect.Slide)
+		}
 		svg += fmt.Sprintf(
-			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"%d\"></rect>\n",
-			transitionId, rect.X, rect.Y, rect.Width, rect.Height, strokeWidth)
+			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"%d\" %s\"></rect>\n",
+			transitionId, rect.X, rect.Y, rect.Width, rect.Height, strokeWidth, onClick)
 	}
 
 	return svg

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func InitDrawing(rect1 Point, rect2 Point) Drawing {
+func initDrawing(rect1 Point, rect2 Point) Drawing {
 
 	d1 := Drawing{}
 	d1.Width = 200
@@ -17,6 +17,11 @@ func InitDrawing(rect1 Point, rect2 Point) Drawing {
 	d1, _ = AddRectangle(d1, rect2.x, rect2.y)
 
 	return d1
+}
+
+func aproxEqual(p1 Point, p2 Point) bool {
+
+	return (math.Abs(p1.x-p2.x) < .5) && (math.Abs(p1.y-p2.y) < .5)
 }
 
 func TestConnectorFromString(t *testing.T) {
@@ -44,7 +49,7 @@ func TestConnectorFromString(t *testing.T) {
 
 func TestRightArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{160, 90})
+	d1 := initDrawing(Point{90, 90}, Point{160, 90})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -77,7 +82,7 @@ func TestRightArrow(t *testing.T) {
 
 func TestLeftArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{10, 90})
+	d1 := initDrawing(Point{90, 90}, Point{10, 90})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -110,7 +115,7 @@ func TestLeftArrow(t *testing.T) {
 
 func TestUpArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{90, 10})
+	d1 := initDrawing(Point{90, 90}, Point{90, 10})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -143,7 +148,7 @@ func TestUpArrow(t *testing.T) {
 
 func TestDownArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{90, 160})
+	d1 := initDrawing(Point{90, 90}, Point{90, 160})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -176,7 +181,7 @@ func TestDownArrow(t *testing.T) {
 
 func TestUpperRightArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{150, 45})
+	d1 := initDrawing(Point{90, 90}, Point{150, 45})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -208,7 +213,7 @@ func TestUpperRightArrow(t *testing.T) {
 
 func TestUpperLeftArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{30, 45})
+	d1 := initDrawing(Point{90, 90}, Point{30, 45})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -240,7 +245,7 @@ func TestUpperLeftArrow(t *testing.T) {
 
 func TestLowerRightArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{150, 170})
+	d1 := initDrawing(Point{90, 90}, Point{150, 170})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -272,7 +277,7 @@ func TestLowerRightArrow(t *testing.T) {
 
 func TestLowerLeftArrow(t *testing.T) {
 
-	d1 := InitDrawing(Point{90, 90}, Point{30, 170})
+	d1 := initDrawing(Point{90, 90}, Point{30, 170})
 
 	c1 := Connector{0, 1}
 	d1 = AddConnector(d1, c1)
@@ -285,12 +290,12 @@ func TestLowerLeftArrow(t *testing.T) {
 	actualP2 := connectorP2(d1, c1)
 	actualSlope := connectorSlope(d1, c1)
 
-	if actualP1 != expectedP1 {
+	if !aproxEqual(actualP1, expectedP1) {
 		t.Log("invalid P1")
 		t.Log(actualP1)
 		t.Fail()
 	}
-	if actualP2 != expectedP2 {
+	if !aproxEqual(actualP2, expectedP2) {
 		t.Log("invalid P2")
 		t.Log(actualP2)
 		t.Fail()
@@ -298,6 +303,31 @@ func TestLowerLeftArrow(t *testing.T) {
 	if actualSlope != expectedSlope {
 		t.Log("invalid Slope")
 		t.Log(actualSlope)
+		t.Fail()
+	}
+}
+
+func TestConnector(t *testing.T) {
+
+	d1 := initDrawing(Point{270, 170}, Point{40, 30})
+
+	c1 := Connector{0, 1}
+	d1 = AddConnector(d1, c1)
+
+	expectedP1 := Point{270, 173.91}
+	expectedP2 := Point{77.94, 57.0}
+
+	actualP1 := connectorP1(d1, c1)
+	actualP2 := connectorP2(d1, c1)
+
+	if !aproxEqual(actualP1, expectedP1) {
+		t.Log("invalid P1")
+		t.Log(actualP1)
+		t.Fail()
+	}
+	if !aproxEqual(actualP2, expectedP2) {
+		t.Log("invalid P2")
+		t.Log(actualP2)
 		t.Fail()
 	}
 }

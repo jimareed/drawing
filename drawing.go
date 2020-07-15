@@ -6,6 +6,12 @@ import (
 	"strings"
 )
 
+// Next Page
+type NextPage struct {
+	Name  string `json:"name"`
+	Delay int    `json:"delay"`
+}
+
 // Drawing
 type Drawing struct {
 	Width       float64      `json:"width"`
@@ -15,6 +21,7 @@ type Drawing struct {
 	Shapes      []Shape      `json:"shapes"`
 	Connectors  []Connector  `json:"connectors"`
 	Transitions []Transition `json:"transitions"`
+	Next        NextPage     `json:"nextPage"`
 }
 
 func FromString(input string) (Drawing, error) {
@@ -34,6 +41,39 @@ func ToString(d Drawing) (string, error) {
 	}
 
 	return string(b), nil
+}
+
+func ToHtml(d Drawing) (string, error) {
+
+	s, err := ToSvg(d)
+	if err != nil {
+		return s, err
+	}
+
+	h := "<!DOCTYPE html>\n" +
+		"<html>\n" +
+		"<head>\n"
+
+	if d.Next.Name != "" && d.Next.Delay > 0 {
+		h += "<script>\n" +
+			"function nextPage() {\n" +
+			"  setTimeout(function(){ location.replace(\"" + d.Next.Name + "\") }, " + fmt.Sprintf("%d", d.Next.Delay) + "000);\n" +
+			"}\n" +
+			"</script>\n"
+	}
+
+	h += "</head>\n"
+	h += "<body"
+
+	if d.Next.Name != "" && d.Next.Delay > 0 {
+		h += " onload=\"nextPage()\""
+	}
+
+	h += ">\n"
+	h += s
+	h += "</body>\n</html>\n"
+
+	return h, err
 }
 
 func ToSvg(d Drawing) (string, error) {

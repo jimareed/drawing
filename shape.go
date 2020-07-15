@@ -8,24 +8,26 @@ import (
 
 // Shape
 type Shape struct {
-	X      float64 `json:"x"`
-	Y      float64 `json:"y"`
-	Width  float64 `json:"width"`
-	Height float64 `json:"height"`
-	Type   string  `json:"type"`
-	Desc   string  `json:"desc"`
-	Size   int     `json:"size"`
-	Style  string  `json:"style"`
-	Slide  string  `json:"slide"`
+	X      float64 `json:"x,omitempty"`
+	Y      float64 `json:"y,omitempty"`
+	Width  float64 `json:"width,omitempty"`
+	Height float64 `json:"height,omitempty"`
+	Type   string  `json:"type,omitempty"`
+	Desc   string  `json:"desc,omitempty"`
+	Size   int     `json:"size,omitempty"`
+	Style  string  `json:"style,omitempty"`
+	Slide  string  `json:"slide,omitempty"`
+	X2     float64 `json:"x2,omitempty"`
+	Y2     float64 `json:"y2,omitempty"`
 }
 
 func shapeFromString(input string) (Shape, error) {
 
 	r := strings.NewReader(input)
-	rect := Shape{}
-	err := json.NewDecoder(r).Decode(&rect)
+	shape := Shape{}
+	err := json.NewDecoder(r).Decode(&shape)
 
-	return rect, err
+	return shape, err
 }
 
 func shapeToString(rect Shape) (string, error) {
@@ -38,26 +40,30 @@ func shapeToString(rect Shape) (string, error) {
 	return string(b), nil
 }
 
-func shapeToSvg(rect Shape, transitionId int) string {
+func shapeToSvg(shape Shape, transitionId int) string {
 
 	svg := ""
 
-	if rect.Type == "text" {
+	if shape.Type == "text" {
 		svg += fmt.Sprintf(
 			"<text class=\"transition%d\" x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%dpx\">%s</text>\n",
-			transitionId, rect.X, rect.Y, rect.Size, rect.Desc)
-	} else {
+			transitionId, shape.X, shape.Y, shape.Size, shape.Desc)
+	} else if shape.Type == "line" {
+		svg += fmt.Sprintf(
+			"<line class=\"transition%d\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"4\" \"></line>\n",
+			transitionId, shape.X, shape.Y, shape.X2, shape.Y2)
+	} else if shape.Type == "rect" {
 		strokeWidth := 4
-		if rect.Style == "hidden" {
+		if shape.Style == "hidden" {
 			strokeWidth = 0
 		}
 		onClick := ""
-		if rect.Slide != "" {
-			onClick = fmt.Sprintf("onclick=\"location.href='%s'\"", rect.Slide)
+		if shape.Slide != "" {
+			onClick = fmt.Sprintf("onclick=\"location.href='%s'\"", shape.Slide)
 		}
 		svg += fmt.Sprintf(
 			"<rect class=\"transition%d\" x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" id=\"1\" stroke=\"black\" fill=\"transparent\" stroke-width=\"%d\" %s\"></rect>\n",
-			transitionId, rect.X, rect.Y, rect.Width, rect.Height, strokeWidth, onClick)
+			transitionId, shape.X, shape.Y, shape.Width, shape.Height, strokeWidth, onClick)
 	}
 
 	return svg

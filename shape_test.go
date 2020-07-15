@@ -6,7 +6,7 @@ import (
 
 func TestShapeFromString(t *testing.T) {
 
-	rect1 := Shape{100, 80, 90, 60, "", "", 24, "", ""}
+	rect1 := Shape{100, 80, 90, 60, "", "", 24, "", "", 0, 0}
 
 	str, err := shapeToString(rect1)
 	if err != nil {

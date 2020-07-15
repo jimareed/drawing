@@ -61,7 +61,6 @@ func ToSvg(d Drawing) (string, error) {
 
 	s := fmt.Sprintf(
 		"<svg width=\"%f\" height=\"%f\" align=\"center\">"+
-			" <rect x=\"0\" y=\"0\" id=\"editor-canvas\" width=\"%f\" height=\"%f\" stroke=\"white\" fill=\"transparent\" stroke-width=\"0\"></rect>"+
 			"%s\n"+
 			"<defs>\n"+
 			"<marker id=\"arrowhead\" markerWidth=\"5\" markerHeight=\"3.5\" refX=\"0\" refY=\"1.75\" orient=\"auto\">\n"+
@@ -78,20 +77,20 @@ func ToSvg(d Drawing) (string, error) {
 			"}\n"+
 			"</style>\n"+
 			"</svg>\n",
-		d.Width, d.Height, d.Width, d.Height, rects, connectors, transitions)
+		d.Width, d.Height, rects, connectors, transitions)
 
 	return s, nil
 }
 
 func AddRectangle(drawing Drawing, x float64, y float64) (Drawing, error) {
 
-	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "rect", "", 0, "", ""})
+	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "rect", "", 0, "", "", 0, 0})
 	return drawing, nil
 }
 
 func AddText(drawing Drawing, x float64, y float64, text string, size int) (Drawing, error) {
 
-	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "text", text, size, "", ""})
+	drawing.Shapes = append(drawing.Shapes, Shape{x, y, drawing.RectWidth, drawing.RectHeight, "text", text, size, "", "", 0, 0})
 	return drawing, nil
 }
 

@@ -48,6 +48,10 @@ func shapeToSvg(shape Shape, transitionId int) string {
 		svg += fmt.Sprintf(
 			"<text class=\"transition%d\" x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%dpx\">%s</text>\n",
 			transitionId, shape.X, shape.Y, shape.Size, shape.Desc)
+	} else if shape.Type == "circle" {
+		svg += fmt.Sprintf(
+			"<circle class=\"transition%d\" cx=\"%f\" cy=\"%f\" r=\"%f\" stroke=\"black\" fill=\"transparent\" stroke-width=\"4\" \"></circle>\n",
+			transitionId, shape.X, shape.Y, shape.Width/2)
 	} else if shape.Type == "line" {
 		svg += fmt.Sprintf(
 			"<line class=\"transition%d\" x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"4\" \"></line>\n",

@@ -43,7 +43,7 @@ func ToString(d Drawing) (string, error) {
 	return string(b), nil
 }
 
-func ToHtml(d Drawing) (string, error) {
+func ToHtml(d Drawing, autoPlay bool) (string, error) {
 
 	s, err := ToSvg(d)
 	if err != nil {
@@ -57,16 +57,21 @@ func ToHtml(d Drawing) (string, error) {
 	if d.Next.Name != "" && d.Next.Delay > 0 {
 		h += "<script>\n" +
 			"function nextPage() {\n" +
-			"  setTimeout(function(){ location.replace(\"" + d.Next.Name + "\") }, " + fmt.Sprintf("%d", d.Next.Delay) + "000);\n" +
-			"}\n" +
-			"</script>\n"
+			"  location.replace(\"" + d.Next.Name + "\");\n" +
+			"}\n"
+		if autoPlay {
+			h += "function autoPage() {\n" +
+				"  setTimeout(function(){ nextPage() }, " + fmt.Sprintf("%d", d.Next.Delay) + "000);\n" +
+				"}\n"
+		}
+		h += "</script>\n"
 	}
 
 	h += "</head>\n"
 	h += "<body"
 
 	if d.Next.Name != "" && d.Next.Delay > 0 {
-		h += " onload=\"nextPage()\""
+		h += " onload=\"autoPage()\""
 	}
 
 	h += ">\n"
@@ -101,6 +106,7 @@ func ToSvg(d Drawing) (string, error) {
 
 	s := fmt.Sprintf(
 		"<svg width=\"%f\" height=\"%f\" align=\"center\">"+
+			"<rect x=\"0\" y=\"0\" width=\"20\" height=\"20\" stroke=\"black\" fill=\"transparent\" stroke-width=\"0\" onclick=\"nextPage()\"></rect>"+
 			"%s\n"+
 			"<defs>\n"+
 			"<marker id=\"arrowhead\" markerWidth=\"5\" markerHeight=\"3.5\" refX=\"0\" refY=\"1.75\" orient=\"auto\">\n"+
